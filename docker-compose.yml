@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: taskflow
+      POSTGRES_DB: taskflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: "postgres://taskflow:taskflow@db:5432/taskflow"
+      JWT_SECRET: "dev-secret-change-me"
+      PORT: "4000"
+    depends_on:
+      - db
+volumes:
+  pgdata:

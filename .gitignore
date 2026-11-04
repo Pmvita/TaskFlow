@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+*.tfstate
+*.tfstate.backup
+.terraform
+frontend/dist
+backend/public
