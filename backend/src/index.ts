@@ -23,6 +23,6 @@ const publicDir = path.join(__dirname, '..', 'public');
 app.use(express.static(publicDir));
 app.get('*', (_req, res) => res.sendFile(path.join(publicDir, 'index.html')));
 
-const server = app.listen(env.port, () => console.log(`TaskFlow API on :${env.port}`));
-process.on('SIGTERM', () => { server.close(); pool.end(); });
+const server = env.nodeEnv !== 'test' ? app.listen(env.port, () => console.log(`TaskFlow API on :${env.port}`)) : undefined;
+if (server) process.on('SIGTERM', () => { server.close(); pool.end(); });
 export default app;

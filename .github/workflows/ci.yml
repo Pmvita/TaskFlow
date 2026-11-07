@@ -3,10 +3,24 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: taskflow
+          POSTGRES_PASSWORD: taskflow
+          POSTGRES_DB: taskflow
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - run: cd backend && npm ci && npm run build
+      - run: cd backend && PGPASSWORD=taskflow psql -h localhost -U taskflow -d postgres -c "CREATE DATABASE taskflow_test;" && TEST_DATABASE_URL=postgres://taskflow:taskflow@localhost:5432/taskflow_test npm test
       - run: cd frontend && npm ci && npm run build
       - run: docker build -t taskflow .

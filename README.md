@@ -56,3 +56,11 @@ docker compose up --build
 ## License
 
 MIT
+
+## Teardown (keep it free)
+
+```bash
+cd infra/terraform
+terraform destroy
+```
+Destroys all billable resources. RDS snapshot first if you need data. CloudWatch/SNS alarms are free tier.
