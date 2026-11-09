@@ -1,6 +1,6 @@
 # TaskFlow
 
-Task management web app (Node/Express + Postgres + React) deployed end-to-end on AWS.
+Task management web app (Node/Express + Postgres + React). **Status:** local + Docker ready. An AWS deploy workflow exists (`.github/workflows/deploy.yml`) but requires GitHub secrets (`AWS_*`, `ECR_REGISTRY`, `EC2_*`, etc.) and may be dormant — there is **no proven public live AWS URL** in this repo.
 
 ## Architecture
 
@@ -40,11 +40,17 @@ Or Docker:
 docker compose up --build
 ```
 
-## Deploy
+## Deploy (AWS — optional / secrets required)
 
-1. Configure AWS creds in GitHub secrets.
+CI (`.github/workflows/ci.yml`) builds backend/frontend and runs tests with Postgres — that path is the portfolio-ready verification.
+
+AWS end-to-end is optional:
+
+1. Configure GitHub secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `ECR_REGISTRY`, `EC2_HOST`, `EC2_SSH_KEY`, `DATABASE_URL`, `JWT_SECRET`).
 2. `cd infra/terraform && terraform init && terraform apply`
-3. Push to main triggers deploy workflow.
+3. Push to `main` triggers `.github/workflows/deploy.yml` (ECR push + SSH restart on EC2).
+
+Until those secrets and infra are active, treat AWS as a documented deploy path — not a live portfolio demo.
 
 ## Security
 
